@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -37,6 +38,7 @@ namespace sspack
 		private bool requirePow2, requireSquare;
 		private int padding;
 		private int outputWidth, outputHeight;
+		private Size tileSize;
 
 		// the input list of image files
 		private List<string> files;
@@ -84,31 +86,35 @@ namespace sspack
 			imagePlacement.Clear();
 
 			// get the sizes of all the images
+            tileSize = Size.Empty;
 			foreach (var image in files)
 			{
 				Bitmap bitmap = Bitmap.FromFile(image) as Bitmap;
 				if (bitmap == null)
 					return (int)FailCode.FailedToLoadImage;
-				imageSizes.Add(image, bitmap.Size);
+				if (tileSize == Size.Empty)
+					tileSize = bitmap.Size; 
+				imageSizes.Add(image, tileSize);
 			}
 
+			// Øazení obrázkù dle velikosti vypnuto, budou všechny stejnì velké
 			// sort our files by file size so we place large sprites first
-			files.Sort(
-				(f1, f2) =>
-				{
-					Size b1 = imageSizes[f1];
-					Size b2 = imageSizes[f2];
+			//files.Sort(
+			//	(f1, f2) =>
+			//	{
+			//		Size b1 = imageSizes[f1];
+			//		Size b2 = imageSizes[f2];
 
-					int c = -b1.Width.CompareTo(b2.Width);
-					if (c != 0)
-						return c;
+			//		int c = -b1.Width.CompareTo(b2.Width);
+			//		if (c != 0)
+			//			return c;
 
-					c = -b1.Height.CompareTo(b2.Height);
-					if (c != 0)
-						return c;
+			//		c = -b1.Height.CompareTo(b2.Height);
+			//		if (c != 0)
+			//			return c;
 
-					return f1.CompareTo(f2);
-				});
+			//		return f1.CompareTo(f2);
+			//	});
 
 			// try to pack the images
 			if (!PackImageRectangles())
@@ -286,7 +292,9 @@ namespace sspack
 		{
 			try
 			{
-				Bitmap outputImage = new Bitmap(outputWidth, outputHeight, PixelFormat.Format32bppArgb);
+				Bitmap outputImage = new Bitmap(outputWidth, outputHeight + padding, PixelFormat.Format32bppArgb);
+
+				int xx = padding / 2, yy = padding / 2;
 
 				// draw all the images into the output image
 				foreach (var image in files)
@@ -296,11 +304,48 @@ namespace sspack
 					if (bitmap == null)
 						return null;
 
+					location.X = xx;
+					location.Y = yy;
+
+					if (bitmap.Width > tileSize.Width)
+						location.X -= (bitmap.Width - tileSize.Width) / 2;
+					if (bitmap.Width > tileSize.Width)
+						location.Y -= (bitmap.Width - tileSize.Width) / 2;
+
+					Debug.WriteLine($"{image}, X={location.X}, Y={location.Y}");
+
+
 					// copy pixels over to avoid antialiasing or any other side effects of drawing
 					// the subimages to the output image using Graphics
 					for (int x = 0; x < bitmap.Width; x++)
 						for (int y = 0; y < bitmap.Height; y++)
 							outputImage.SetPixel(location.X + x, location.Y + y, bitmap.GetPixel(x, y));
+
+					// Pokud má soubor v názvu SPAD, tak to pøidá paddingový 1px okraj nikoli prùhledný, ale kopii sousedního øádku/sloupce
+					if (image.Contains("SPAD"))
+					{
+						for (int x = 0; x < bitmap.Width; x++)
+						{
+							outputImage.SetPixel(location.X + x, location.Y - 1, bitmap.GetPixel(x, 0));
+							outputImage.SetPixel(location.X + x, location.Y + bitmap.Height, bitmap.GetPixel(x, bitmap.Height - 1));
+						}
+						for (int y = 0; y < bitmap.Height; y++)
+						{
+							outputImage.SetPixel(location.X - 1, location.Y + y, bitmap.GetPixel(0, y));
+							outputImage.SetPixel(location.X + bitmap.Width, location.Y + y, bitmap.GetPixel(bitmap.Width - 1, y));
+						}
+						outputImage.SetPixel(location.X - 1, location.Y - 1, bitmap.GetPixel(0, 0));
+						outputImage.SetPixel(location.X + bitmap.Width, location.Y - 1, bitmap.GetPixel(bitmap.Width - 1, 0));
+						outputImage.SetPixel(location.X - 1, location.Y + bitmap.Height, bitmap.GetPixel(0, bitmap.Height - 1));
+						outputImage.SetPixel(location.X + bitmap.Width, location.Y + bitmap.Height, bitmap.GetPixel(bitmap.Width - 1, bitmap.Height - 1));
+					}
+
+					xx += tileSize.Width + padding;
+					if (xx + padding >= outputWidth)
+					{
+						xx = padding / 2;
+						yy += tileSize.Height + padding;
+					}
 				}
 
 				return outputImage;

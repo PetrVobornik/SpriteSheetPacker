@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SpriteSheetPacker</RootNamespace>
     <AssemblyName>Sprite Sheet Packer</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +59,21 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sspack\Constants.cs" />
+    <Compile Include="sspack\Exporters\BmpImageExporter.cs" />
+    <Compile Include="sspack\Exporters\Exporters.cs" />
+    <Compile Include="sspack\Exporters\IImageExporter.cs" />
+    <Compile Include="sspack\Exporters\IMapExporter.cs" />
+    <Compile Include="sspack\Exporters\JpegImageExporter.cs" />
+    <Compile Include="sspack\Exporters\PngImageExporter.cs" />
+    <Compile Include="sspack\Exporters\TxtMapExporter.cs" />
+    <Compile Include="sspack\Packing\ArevaloRectanglePacker.cs" />
+    <Compile Include="sspack\Packing\ImagePacker.cs" />
+    <Compile Include="sspack\Packing\MiscHelper.cs" />
+    <Compile Include="sspack\Packing\OutOfSpaceException.cs" />
+    <Compile Include="sspack\Packing\RectanglePacker.cs" />
+    <Compile Include="sspack\Program.cs" />
+    <Compile Include="sspack\ProgramArguments.cs" />
     <EmbeddedResource Include="SpriteSheetPackerForm.resx">
       <DependentUpon>SpriteSheetPackerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -71,16 +87,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SpriteSheetPacker.XnaExporters\SpriteSheetPacker.XnaExporters.csproj">
-      <Project>{CDC8B701-36E9-40DF-A21A-593AD4B90F31}</Project>
-      <Name>SpriteSheetPacker.XnaExporters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\sspack\sspack.csproj">
-      <Project>{1AC0A15F-98D2-477D-A620-A8F7B79935F4}</Project>
-      <Name>sspack</Name>
-    </ProjectReference>
+    <None Include="sspack\app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

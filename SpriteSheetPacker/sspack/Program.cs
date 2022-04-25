@@ -50,10 +50,10 @@ namespace sspack
 
 	public class Program
 	{
-		static int Main(string[] args)
-		{
-			return Launch(args);
-		}
+		//static int Main(string[] args)
+		//{
+		//	return Launch(args);
+		//}
 
 		public static int Launch(string[] args)
 		{
