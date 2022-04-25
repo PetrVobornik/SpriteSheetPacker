@@ -48,12 +48,18 @@ namespace sspack
 			using (StreamWriter writer = new StreamWriter(filename))
 			{
 				foreach (var image in outputFiles)
+					writer.WriteLine(Path.GetFileNameWithoutExtension(image).Replace("-SPAD", ""));
+				writer.WriteLine();
+
+				int i = 0;
+				foreach (var image in outputFiles)
 				{
 					// get the destination rectangle
 					Rectangle destination = map[image];
 
 					// write out the destination rectangle for this bitmap
-					writer.WriteLine(Path.GetFileNameWithoutExtension(image));
+					writer.WriteLine(string.Format("{0} = {1},", 
+						Path.GetFileNameWithoutExtension(image).Replace("-SPAD", ""), i++));
 					//writer.WriteLine(string.Format(
 					//             	"{0} = {1} {2} {3} {4}", 
 					//             	Path.GetFileNameWithoutExtension(image), 
