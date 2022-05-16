@@ -4,7 +4,7 @@ Compared to the original, it is changed so that if the image file name contains 
 (if padding=2), copying its border colors (not the transparent pixel). It also only counts uniformly sized images. 
 The output text file is also modified, where there are no more image borders, but only a list of images (usable for enum).
 
-This was needed for the (ToDe project)[https://github.com/PetrVobornik/ToDe].
+This was needed for the [ToDe project](https://github.com/PetrVobornik/ToDe).
 
 
 ## Original README text...
