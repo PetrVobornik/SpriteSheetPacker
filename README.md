@@ -1,5 +1,14 @@
 # SpriteSheetPacker
 
+Compared to the original, it is changed so that if the image file name contains "SPAD", a 1px border is added around it at 
+(if padding=2), copying its border colors (not the transparent pixel). It also only counts uniformly sized images. 
+The output text file is also modified, where there are no more image borders, but only a list of images (usable for enum).
+
+This was needed for the (ToDe project)[https://github.com/PetrVobornik/ToDe].
+
+
+## Original README text...
+
 Sprite Sheet Packer is a fully featured tool for combining multiple individual images into a single, efficiently laid out image.
 
 ![](https://github.com/kellygravelyn/spritesheetpacker/blob/master/images/ToolUI.png)

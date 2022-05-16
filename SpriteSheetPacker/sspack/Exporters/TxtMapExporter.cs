@@ -47,9 +47,9 @@ namespace sspack
 
 			using (StreamWriter writer = new StreamWriter(filename))
 			{
-				foreach (var image in outputFiles)
-					writer.WriteLine(Path.GetFileNameWithoutExtension(image).Replace("-SPAD", ""));
-				writer.WriteLine();
+				//foreach (var image in outputFiles)
+				//	writer.WriteLine(Path.GetFileNameWithoutExtension(image).Replace("-SPAD", ""));
+				//writer.WriteLine();
 
 				int i = 0;
 				foreach (var image in outputFiles)
